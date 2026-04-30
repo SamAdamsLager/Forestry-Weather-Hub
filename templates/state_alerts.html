@@ -1,0 +1,86 @@
+<!--
+Name: Terry Wayne Smith
+Date: 05-07-2025
+Class: ITSE-1411-V01-Beginning Web Page Programming
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ter's Weather Hub - State Weather Alerts</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/TerryWayneSmithindex.html">Home</a></li>
+                <li><a href="/lone_star_weather">Lone Star Town Weather</a></li>
+                <li><a href="/live_local_weather.html">Current Local Weather</a></li>
+                <li><a href="/ip_alerts">IP-Based Weather Alerts</a></li>
+                <li><a href="/state_alerts">State Weather Alerts</a></li>
+                <li><a href="/trivia.html">Weather Trivia</a></li>
+                <li><a href="/contact.html">Contact Page</a></li>
+                <li><a href="/multimedia.html">Live WildFlower Cam</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h1>State Weather Alerts</h1>
+        <p>Enter a 2-letter state abbreviation to get the latest weather alerts:</p>
+
+        <form method="POST" action="/state_alerts">
+            <label for="state">State Abbreviation:</label><br>
+            <input type="text" id="state" name="state" required maxlength="2" pattern="[A-Za-z]{2}" title="Enter 2-letter state code" value="{{ state_input if state_input }}"> <br>
+            <input type="submit" value="Get Alerts">
+        </form>
+
+        {% if form_error %}
+            <p style="color: red; margin-top: 15px;">Error: {{ form_error }}</p>
+        {% endif %}
+
+        <div id="state-alerts-results" style="margin-top: 20px;">
+            {% if data %}
+                {% if data.error %}
+                    <p style="color: orange;">Status: {{ data.error }}</p>
+                {% endif %}
+
+                {% if data.state_proc and data.alerts is defined %}
+                    <h3>
+                        {% if data.alerts %}
+                            Active Alerts for {{ data.state_proc }}
+                        {% else %}
+                            No Active Alerts for {{ data.state_proc }}
+                        {% endif %}
+                    </h3>
+                    <p>(Checked at: {{ data.current_time }})</p>
+
+                    {% if data.alerts %}
+                        <hr>
+                        {% for alert in data.alerts %}
+                            <h4>{{ alert.headline }}</h4>
+                            <h5>Area: {{ alert.areaDesc }}</h5>
+                            <p>{{ alert.description }}</p>
+                            <hr>
+                        {% endfor %}
+                    {% endif %}
+
+                {% elif data.state_req and not data.state_proc and not data.error %}
+                     <p>Invalid state submitted: {{ data.state_req | upper }}</p>
+                {% endif %}
+
+            {% elif state_input and not form_error %}
+
+                <p>Could not process request for state: {{ state_input | upper }}</p>
+            {% endif %}
+        </div>
+
+    </main>
+    <footer>
+        <p>&copy; 2025 Ter's Weather Hub. All rights reserved.</p>
+    </footer>
+</body>
+</html>

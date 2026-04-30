@@ -1,0 +1,62 @@
+<!--
+Name: Terry Wayne Smith
+Date: 05-07-2025
+Class: ITSE-1411-V01-Beginning Web Page Programming
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ter's Weather Hub - Lone Star Town Weather</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/TerryWayneSmithindex.html">Home</a></li>
+                <li><a href="/lone_star_weather">Lone Star Town Weather</a></li>
+                <li><a href="/live_local_weather.html">Current Local Weather</a></li>
+                <li><a href="/ip_alerts">IP-Based Weather Alerts</a></li>
+                <li><a href="/state_alerts">State Weather Alerts</a></li>
+                <li><a href="/trivia.html">Weather Trivia</a></li>
+                <li><a href="/contact.html">Contact Page</a></li>
+                <li><a href="/multimedia.html">Live WildFlower Cam</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h1>Lone Star Town Weather</h1>
+        <p>Enter the name of a Texas city to get the latest weather updates:</p>
+
+        <form method="POST" action="/lone_star_weather">
+            <label for="city">City:</label><br>
+            <input type="text" id="city" name="city" required value="{{ city_name if city_name }}"><br>
+            <input type="submit" value="Get Weather">
+        </form>
+
+        <div id="weather-results" style="margin-top: 20px;">
+            {% if error_message %}
+                <p style="color: red;">Error: {{ error_message }}</p>
+            {% elif city_name and weather_data %}
+                <h3>Weather for {{ city_name | capitalize }}:</h3>
+                <ul>
+                    <li><strong>Temperature:</strong> {{ weather_data.temperature }}</li>
+                    <li><strong>Feels Like:</strong> {{ weather_data.wind_chill }}</li>
+                    <li><strong>Humidity:</strong> {{ weather_data.humidity }}</li>
+                    <li><strong>Wind Speed:</strong> {{ weather_data.wind_speed }} mph</li>
+                </ul>
+            {% elif city_name %}
+                 <p>No weather data found for {{ city_name | capitalize }}.</p>
+            {% endif %}
+        </div>
+
+    </main>
+    <footer>
+        <p>&copy; 2025 Ter's Weather Hub. All rights reserved.</p>
+    </footer>
+</body>
+</html>

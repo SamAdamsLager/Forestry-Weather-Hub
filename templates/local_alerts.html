@@ -1,0 +1,67 @@
+<!--
+Name: Terry Wayne Smith
+Date: 05-07-2025
+Class: ITSE-1411-V01-Beginning Web Page Programming
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ter's Weather Hub - IP-Based Weather Alerts</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/TerryWayneSmithindex.html">Home</a></li>
+                <li><a href="/lone_star_weather">Lone Star Town Weather</a></li>
+                <li><a href="/live_local_weather.html">Current Local Weather</a></li>
+                <li><a href="/ip_alerts">IP-Based Weather Alerts</a></li>
+                <li><a href="/state_alerts">State Weather Alerts</a></li>
+                <li><a href="/trivia.html">Weather Trivia</a></li>
+                <li><a href="/contact.html">Contact Page</a></li>
+                <li><a href="/multimedia.html">Live WildFlower Cam</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h1>IP-Based Weather Alerts</h1>
+
+        {# Display the results passed from Flask #}
+        <div id="ip-alerts-results" style="margin-top: 20px;">
+
+            {# Check if an error message was passed #}
+            {% if data.error %}
+                <p style="color: red;">Error: {{ data.error }}</p>
+
+            {# Check if the alerts list exists and is not empty #}
+            {% elif data.alerts %}
+                <h3>Active Alerts for {{ data.city }}, {{ data.state }}</h3>
+                <p>(Checked at: {{ data.current_time }})</p>
+                <hr>
+                {# Loop through each alert in the list #}
+                {% for alert in data.alerts %}
+                    <h4>{{ alert.headline }}</h4>
+                    <h5>Area: {{ alert.areaDesc }}</h5>
+                    <p>{{ alert.description }}</p>
+                    <hr>
+                {% endfor %}
+
+            {# If no error and alerts list is empty #}
+            {% else %}
+                <h3>No Active Alerts for {{ data.city }}, {{ data.state }}</h3>
+                <p>(Checked at: {{ data.current_time }})</p>
+            {% endif %}
+
+        </div>
+
+    </main>
+    <footer>
+        <p>&copy; 2025 Ter's Weather Hub. All rights reserved.</p>
+    </footer>
+</body>
+</html>

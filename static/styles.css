@@ -1,0 +1,113 @@
+/*
+Name: Terry Wayne Smith
+Date: 05-07-2025
+Class: ITSE-1411-V01-Beginning Web Page Programming
+*/
+
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif; 
+    background-image: url('/static/images/SunFlowerBackGround.jpg'); 
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+h1, h2, h3 {
+    text-align: center;
+    color: #ffffff; 
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+video, img, iframe {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    border: none;
+}
+
+header {
+    padding: 15px 20px;
+    color: #ffffff;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+main {
+    padding: 20px;
+    max-width: 960px;
+    margin: 20px auto;
+    border-radius: 8px;
+    color: #ffffff;
+}
+
+/* Make letters POP */
+main p, 
+main li, 
+main label, 
+main th, 
+main td, 
+main h1, 
+main h2,
+main h3,
+main a {
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+footer {
+    padding: 15px 20px;
+    color: #ffffff;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+    text-align: center;
+}
+
+/* Component Styles */
+button, input[type="submit"] {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+button:hover, input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* Specific ID Styles */
+#cam-error {
+    display: none;
+}
+
+/* Link Styling */
+main a {
+    color: #ffffff;
+    text-decoration: none;
+}
+main a:hover {
+    text-decoration: underline;
+    color: #FF1493;
+}
+
+header a, footer a {
+     color: #ffffff;
+     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+     text-decoration: none;
+}
+
+header a:hover, footer a:hover {
+     color: #FF1493;
+     text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    main {
+        margin: 10px;
+        padding: 15px;
+    }
+    /* Add other responsive styles as needed */
+}

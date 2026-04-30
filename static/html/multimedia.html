@@ -1,0 +1,104 @@
+<!--
+Name: Terry Wayne Smith
+Date: 05-07-2025
+Class: ITSE-1411-V01-Beginning Web Page Programming
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ter's Weather Hub - Multimedia</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/TerryWayneSmithindex.html">Home</a></li>
+                <li><a href="/lone_star_weather">Lone Star Town Weather</a></li>
+                <li><a href="/live_local_weather.html">Current Local Weather</a></li>
+                <li><a href="/ip_alerts">IP-Based Weather Alerts</a></li>
+                <li><a href="/state_alerts">State Weather Alerts</a></li>
+                <li><a href="/trivia.html">Weather Trivia</a></li>
+                <li><a href="/contact.html">Contact Page</a></li>
+                <li><a href="/multimedia.html">Live WildFlower Cam</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h1>Weather Multimedia</h1>
+        <p>Explore our Live Cam in 4k</p>
+        <p>Watch Summer 2025 as I convert yard to Tahoma 31 Bermuda Baby Golf Course!</p>
+        <p>SnapShot updated every 5 mins</p>
+        <section>
+            <h2>Videos</h2>
+            <p>Live Wildflower Cam(4k):</p>
+            <div class="container">
+                <img id="wildflower-image" src="/static/wildflowersnapshot.jpg" alt="Wildflower Snapshot">
+                <br><br>
+
+                <!-- *** Button to switch from snapshot to live stream *** --->
+                <button onclick="startLiveStream()">&#x1F33B; Watch Live Stream &#x1F33B;</button>
+                <!-- Manual revert back to SnapShot View-->
+                <button onclick="revertToSnapshot()">&#x1f33B Revert to SnapShot &#x1F33B;</button>
+            </div>
+
+                <!-- *** Countdown Timer ***-->
+                <p id="timer"></p>
+                <p id="cam-error">
+                    Webcam Stream Unavailable on This Device.
+                </p>            
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 Ter's Weather Hub. All rights reserved.</p>
+    </footer>
+
+    <script>
+        let countdownTimer = null;
+    
+        function camError() {
+            var img = document.getElementById("wildflower-image");
+            var errorMsg = document.getElementById("cam-error");
+            img.style.display = "none";
+            errorMsg.style.display = "block";
+        }
+    
+        function startLiveStream() {
+            document.getElementById("wildflower-image").src = "/wildflower_stream";
+    
+            let duration = 1800; // 30 minutes
+            updateCountdown(duration);
+    
+            if (countdownTimer) clearInterval(countdownTimer);
+    
+            countdownTimer = setInterval(function () {
+                duration--;
+                updateCountdown(duration);
+    
+                if (duration <= 0) {
+                    revertToSnapshot();
+                }
+            }, 1000);
+        }
+    
+        function revertToSnapshot() {
+            document.getElementById("wildflower-image").src = "/static/wildflowersnapshot.jpg";
+            clearInterval(countdownTimer);
+            document.getElementById("timer").textContent = "";
+        }
+    
+        function updateCountdown(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            document.getElementById("timer").textContent =
+                `Live stream will revert in ${mins}:${secs.toString().padStart(2, '0')} — click 🌼 again to reset.`;
+        }
+    </script>
+    
+
+</body>
+</html>
