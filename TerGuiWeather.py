@@ -1,6 +1,6 @@
 # Name: Terry Wayne Smith
-# Date: 11-4-2024
-# Class: ITSE 1402 Computer Programming
+# Date: 05-07-2025
+# Class: ITSE-1411-V01-Beginning Web Page Programming
 # Purpose: This program fetches and displays weather alerts for specific locations. It allows the user to get Local Weather from my Weather Station, City Weather in Texas, Local IP and State Weather alerts.
 
 
@@ -43,7 +43,7 @@ def show_local_weather():
     global local_weather_text
     TerLocalWeather.local_weather()  # Calling function from module
     try:
-        with open("local_weather.html", "r") as file:
+        with open("static/html/local_weather.html", "r") as file:
             weather_content = file.read()
 
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")

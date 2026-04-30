@@ -1,6 +1,6 @@
 # Name: Terry Wayne Smith
-# Date: 11-4-2024
-# Class: ITSE 1402 Computer Programming
+# Date: 05-07-2025
+# Class: ITSE-1411-V01-Beginning Web Page Programming
 # Purpose: This program fetches and displays weather alerts for specific locations. It allows the user to get Local Weather from my Weather Station, City Weather in Texas, Local IP and State Weather alerts.
 # 
 # This Module will get User requested weather

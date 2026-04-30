@@ -1,40 +1,78 @@
 # Name: Terry Wayne Smith
-# Date: 11-4-2024
-# Class: ITSE 1402 Computer Programming
-# Purpose: This program fetches and displays weather alerts for specific locations. It allows the user to get Local Weather from my Weather Station, City Weather in Texas, Local IP and State Weather alerts.
+# Date: 05-07-2025
+# Class: ITSE-1411-V01-Beginning Web Page Programming
+# Purpose: Fetches local‑station weather and writes a full HTML page.
 
+from datetime import datetime, timedelta               
+from pathlib import Path                     
+from playwright.sync_api import sync_playwright, Error
 
-import requests
-from bs4 import BeautifulSoup
+_last_fetch = None
+_cached_data = None
 
-def fetch_weather(): # Fetch My McAllen Weather Station 
+# ------------------------------------------------------------------ fetch
+def fetch_weather():
     url = "https://www.wunderground.com/dashboard/pws/KTXMCALL89"
-    response = requests.get(url)
-    soup = BeautifulSoup(response.text, "html.parser")
-    temperature = soup.find(class_="current-temp").get_text()
-    humidity = soup.find(class_= "wu-unit-humidity").get_text() 
-    humidity = humidity.replace("°", "").strip()
-    wind_chill = soup.find(class_="feels-like-temp weather__header").get_text()
-    wind_speed = soup.find(class_="weather__text").get_text()
-    wind_speed = wind_speed.replace ("°", "").strip()
-    wind_dial = soup.find(class_="wind-dial__container").get_text()
-    weather_data ={"temperature" : temperature, "wind_chill": wind_chill, "humidity" : humidity, "wind_speed" : wind_speed, "wind_dial" : wind_dial}
-    return weather_data #wind_unit, wind_direction
+    try:
+        with sync_playwright() as p:
+            browser = p.chromium.launch(headless=True)
+            page = browser.new_page()
+            page.goto(url, timeout=60_000)
+            page.wait_for_selector(".main-temp .wu-value", timeout=60_000)
+
+            def safe(sel):
+                try:
+                    return page.locator(sel).inner_text().strip()
+                except:
+                    return "N/A"
+
+            data = {
+                "temperature": safe(".main-temp .wu-value"),
+                "wind_chill":  safe(".feels-like-temp.weather__header .wu-value"),
+                "wind_speed":  safe(".weather__wind-gust .wu-unit-speed .wu-value"),
+                "wind_dial":   safe("div.wind-dial__container .text-wrapper .text-bold"),
+            }
+            browser.close()
+            return data
+
+    except Error as e:
+        print("Playwright error:", e)
+        return {k: "N/A" for k in
+                ["temperature", "wind_chill", "wind_speed", "wind_dial"]}
+    
+
+"""Return cached weather for 30 min, refresh after 30"""
+def fetch_weather_cached():
+    global _last_fetch, _cached_data
+    if _last_fetch and datetime.now() - _last_fetch < timedelta(minutes=30):
+        return _cached_data
+    
+    _cached_data = fetch_weather()     # Playwright scrape
+    _last_fetch  = datetime.now()
+    return _cached_data
+    
+
+    
 
 def local_weather():
-    weather_data = fetch_weather()
-    temperature = weather_data["temperature"]
-    humidity = weather_data["humidity"]
-    wind_chill = weather_data["wind_chill"]
-    wind_speed = weather_data["wind_speed"]
-    wind_dial = weather_data["wind_dial"]
-    print(f"The temperature in McAllen TX is {temperature}  {wind_chill} Humidity is {humidity} Wind speed is {wind_speed}  from the {wind_dial}")
+    weather = fetch_weather_cached()
 
-    with open("local_weather.html", "w") as file:
-        file.write(f"The temperature in McAllen TX is {temperature}\n")
-        file.write(f"Feels Like: {wind_chill}\n")
-        file.write(f"Humidity: {humidity}\n")
-        file.write(f"Wind speed: {wind_speed}\n")
-        file.write(f"Wind direction: {wind_dial}\n")
-    
-        
+    # ---- timestamp -------------------------------------------------------
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    # ----------------------------------------------------------------------
+
+    weather_block = f"""
+        <p><strong>Last updated:</strong> {now}</p>
+        <ul>
+          <li><strong>Temperature:</strong> {weather['temperature']}°F</li>
+          <li><strong>Feels Like:</strong> {weather['wind_chill']}°F</li>
+          <li><strong>Wind Speed:</strong> {weather['wind_speed']} mph</li>
+          <li><strong>Wind Direction:</strong> {weather['wind_dial']}</li>
+        </ul>
+    """
+
+    tpl   = Path("templates/_local_weather_template.html")
+    final = Path("static/html/live_local_weather.html")
+
+    html  = tpl.read_text(encoding="utf-8").replace("{{WEATHER_BLOCK}}", weather_block)
+    final.write_text(html, encoding="utf-8")
