@@ -14,7 +14,7 @@ import requests
 
 
 app = Flask(__name__)
-camera = cv2.VideoCapture("rtsp://admin:ShinerBock!845@192.168.50.79/Preview_01_main") # leave at 0 for default webcam
+camera = cv2.VideoCapture("rtsp://putpasswordhere/Preview_01_main") # leave at 0 for default webcam
 
 frame_lock = threading.Lock()
 latest_frame = None
